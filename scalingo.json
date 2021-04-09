@@ -2,12 +2,12 @@
   "name": "Mattermost",
   "description": "Mattermost",
   "logo": "https://about.mattermost.com/wp-content/uploads/2017/08/Mattermost-Logo-Blue.svg",
-  "repository": "https://github.com/MTES-MCT/mattermost-scalingo",
+  "repository": "https://github.com/MTES-MCT/mattermost-buildpack",
   "website": "https://mattermost.com",
   "env": {
     "BUILDPACK_URL": {
       "description": "Buildpack used to deploy Mattermost",
-      "value": "https://github.com/MTES-MCT/mattermost-scalingo.git",
+      "value": "https://github.com/MTES-MCT/mattermost-buildpack.git",
       "required": true
     },
     "DB_TYPE": {
