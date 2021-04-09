@@ -1,0 +1,78 @@
+{
+  "name": "Mattermost",
+  "description": "Mattermost",
+  "logo": "https://about.mattermost.com/wp-content/uploads/2017/08/Mattermost-Logo-Blue.svg",
+  "repository": "https://github.com/MTES-MCT/mattermost-scalingo",
+  "website": "https://mattermost.com",
+  "env": {
+    "DB_TYPE": {
+      "description": "db addon type: postgres or mysql",
+      "value": "postgres"
+    },
+    "DB_USER": {
+      "description": "db username",
+      "value": "mattermost"
+    },
+    "DB_PASSWORD": {
+      "description": "db password",
+      "value": ""
+    },
+    "DB_NAME": {
+      "description": "db name",
+      "value": "mattermost"
+    },
+    "DB_HOST": {
+      "description": "db host",
+      "value": ""
+    },
+    "DB_PORT": {
+      "description": "db port",
+      "value": "5432"
+    },
+    "FILE_DRIVER_NAME": {
+      "description": "file driver name",
+      "value": "amazons3"
+    },
+    "S3_KEY_ID": {
+      "description": "s3 key access key id",
+      "value": ""
+    },
+    "S3_KEY_SECRET": {
+      "description": "s3 key access secret",
+      "value": ""
+    },
+    "S3_BUCKET": {
+      "description": "s3 bucket",
+      "value": ""
+    },
+    "S3_REGION": {
+      "description": "s3 region",
+      "value": ""
+    },
+    "S3_ENDPOINT": {
+      "description": "s3 endpoint e.g. s3.sample.com:443",
+      "value": ""
+    },
+    "SMTP_HOST": {
+      "description": "smtp host",
+      "value": ""
+    },
+    "SMTP_PORT": {
+      "description": "smtp port",
+      "value": ""
+    },
+    "SMTP_USER": {
+      "description": "smtp user name",
+      "value": ""
+    },
+    "SMTP_PASSWORD": {
+      "description": "smtp password",
+      "value": ""
+    },
+    "MATTERMOST_FRONTEND_URL": {
+      "description": "site url",
+      "value": ""
+    }
+  },
+  "addons": ["postgres"]
+}
