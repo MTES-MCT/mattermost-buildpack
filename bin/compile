@@ -1,0 +1,176 @@
+#!/bin/bash
+# usage: bin/compile <build-dir> <cache-dir> <env-dir>
+
+set -eo pipefail
+
+BUILD_DIR=${1:-}
+CACHE_DIR=${2:-}
+ENV_DIR=${3:-}
+buildpack="$(cd -P "$(dirname "$0")" && pwd)"
+
+source "${buildpack}/common.sh"
+
+if [ -n "$BUILDPACK_DEBUG" ]; then
+  set -x
+fi
+
+MATTERMOST_PATH="$BUILD_DIR/mattermost"
+TMP_PATH="$BUILD_DIR/tmp"
+mkdir -p "${BUILD_DIR}/bin" "${CACHE_DIR}/dist" "${TMP_PATH}"
+export PATH="$BUILD_DIR/bin:$PATH"
+
+STACK="${STACK:-scalingo-18}"
+
+start "Install Mattermost"
+
+if [[ -f "$ENV_DIR/MATTERMOST_VERSION" ]]; then
+  MATTERMOST_VERSION=$(cat "$ENV_DIR/MATTERMOST_VERSION")
+else
+  MATTERMOST_VERSION="5.33.3"
+fi
+
+start "Fetch Mattermost ${MATTERMOST_VERSION} dist"
+if [ ! -d "${MATTERMOST_PATH}" ]; then
+  fetch_mattermost_dist "${MATTERMOST_VERSION}" "${TMP_PATH}" | indent
+  mv "${TMP_PATH}/mattermost" "${MATTERMOST_PATH}"
+else
+  warn "Mattermost already installed"
+  if [[ -f "${ENV_DIR}/MATTERMOST_MIGRATION" ]]; then
+    MATTERMOST_MIGRATION=$(cat "$ENV_DIR/MATTERMOST_MIGRATION")
+  else
+    MATTERMOST_MIGRATION=0
+  fi
+  if [ $MATTERMOST_MIGRATION == 1 ]; then
+    info "Mattermost migration into ${MATTERMOST_VERSION}"
+    mv "/app/mattermost" "${TMP_PATH}/mattermost-backup"
+    fetch_mattermost_dist "${MATTERMOST_VERSION}" "${TMP_PATH}" | indent
+    mv "${TMP_PATH}/mattermost-${MATTERMOST_VERSION}" "${MATTERMOST_PATH}"
+    cp -r "${TMP_PATH}/mattermost-backup/config/config.json" "${MATTERMOST_PATH}/config/config.json"
+  fi
+fi
+finished
+
+info "Using mattermost version: ${MATTERMOST_VERSION}" | indent
+
+install_jq
+
+start "Configure database addon"
+  if [[ -f "${ENV_DIR}/DB_TYPE" ]]; then
+    DB_TYPE=$(cat "$ENV_DIR/DB_TYPE")
+  else
+    DB_TYPE="postgres"
+  fi
+
+  if [[ -f "${ENV_DIR}/DB_USER" ]]; then
+    DB_USER=$(cat "$ENV_DIR/DB_USER")
+  else
+    DB_USER="mmuser"
+  fi
+
+  if [[ -f "${ENV_DIR}/DB_PASSWORD" ]]; then
+    DB_PASSWORD=$(cat "$ENV_DIR/DB_PASSWORD")
+  else
+    DB_PASSWORD=""
+  fi
+
+  if [[ -f "${ENV_DIR}/DB_HOST" ]]; then
+    DB_HOST=$(cat "$ENV_DIR/DB_HOST")
+  else
+    DB_HOST="localhost"
+  fi
+
+  if [[ -f "${ENV_DIR}/DB_PORT" ]]; then
+    DB_PORT=$(cat "$ENV_DIR/DB_PORT")
+  else
+    DB_PORT="5432"
+  fi
+
+  if [[ -f "${ENV_DIR}/DB_NAME" ]]; then
+    DB_NAME=$(cat "$ENV_DIR/DB_NAME")
+  else
+    DB_NAME="mattermost"
+  fi
+
+configure_database "${MATTERMOST_PATH}" "${DB_TYPE}" "${DB_USER}" "${DB_PASSWORD}" "${DB_HOST}" "${DB_PORT}" "${DB_NAME}" | indent
+finished
+
+start "Configure mattermost"
+
+  if [[ -f "${ENV_DIR}/MATTERMOST_FRONTEND_URL" ]]; then
+    MATTERMOST_FRONTEND_URL=$(cat "$ENV_DIR/MATTERMOST_FRONTEND_URL")
+  else
+    MATTERMOST_FRONTEND_URL=""
+  fi
+
+  if [[ -f "${ENV_DIR}/MATTERMOST_PORT" ]]; then
+    MATTERMOST_PORT=$(cat "$ENV_DIR/MATTERMOST_PORT")
+  else
+    MATTERMOST_PORT="8065"
+  fi
+
+  if [[ -f "${ENV_DIR}/SMTP_HOST" ]]; then
+    SMTP_HOST=$(cat "$ENV_DIR/SMTP_HOST")
+  else
+    SMTP_HOST=""
+  fi
+
+  if [[ -f "${ENV_DIR}/SMTP_PORT" ]]; then
+    SMTP_PORT=$(cat "$ENV_DIR/SMTP_PORT")
+  else
+    SMTP_PORT="25"
+  fi
+
+  if [[ -f "${ENV_DIR}/SMTP_USER" ]]; then
+    SMTP_USER=$(cat "$ENV_DIR/SMTP_USER")
+  else
+    SMTP_USER=""
+  fi
+
+  if [[ -f "${ENV_DIR}/SMTP_PASSWORD" ]]; then
+    SMTP_PASSWORD=$(cat "$ENV_DIR/SMTP_PASSWORD")
+  else
+    SMTP_PASSWORD=""
+  fi
+
+  if [[ -f "${ENV_DIR}/FILE_DRIVER_NAME" ]]; then
+    FILE_DRIVER_NAME=$(cat "$ENV_DIR/FILE_DRIVER_NAME")
+  else
+    FILE_DRIVER_NAME="local"
+  fi
+
+  if [[ -f "${ENV_DIR}/S3_KEY_ID" ]]; then
+    S3_KEY_ID=$(cat "$ENV_DIR/S3_KEY_ID")
+  else
+    S3_KEY_ID=""
+  fi
+
+  if [[ -f "${ENV_DIR}/S3_KEY_SECRET" ]]; then
+    S3_KEY_SECRET=$(cat "$ENV_DIR/S3_KEY_SECRET")
+  else
+    S3_KEY_SECRET=""
+  fi
+
+  if [[ -f "${ENV_DIR}/S3_BUCKET" ]]; then
+    S3_BUCKET=$(cat "$ENV_DIR/S3_BUCKET")
+  else
+    S3_BUCKET=""
+  fi
+
+  if [[ -f "${ENV_DIR}/S3_REGION" ]]; then
+    S3_REGION=$(cat "$ENV_DIR/S3_REGION")
+  else
+    S3_REGION=""
+  fi
+
+  if [[ -f "${ENV_DIR}/S3_ENDPOINT" ]]; then
+    S3_ENDPOINT=$(cat "$ENV_DIR/S3_ENDPOINT")
+  else
+    S3_ENDPOINT=""
+  fi
+configure_mattermost "${MATTERMOST_PATH}" "${MATTERMOST_FRONTEND_URL}" "${MATTERMOST_PORT}" "${SMTP_HOST}"  "${SMTP_PORT}"  "${SMTP_USER}"  "${SMTP_PASSWORD}" "${FILE_DRIVER_NAME}" "${S3_KEY_ID}" "${S3_KEY_SECRET}" "${S3_BUCKET}" "${S3_REGION}" "${S3_ENDPOINT}" | indent
+finished
+
+step "Cleaning up tmp files"
+rm -rf "${TMP_PATH}"
+
+finished

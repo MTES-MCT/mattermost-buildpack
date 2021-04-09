@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# Always accept the Mattermost buildpack
+echo "Mattermost"
+exit 0

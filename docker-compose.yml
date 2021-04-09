@@ -1,0 +1,54 @@
+version: '3.8'
+
+services: 
+    postgres: 
+        image: postgres
+        networks: 
+            - mattermost_network
+        env_file: .env
+        restart: 'always'
+        volumes:
+            - db_volume:/var/lib/postgresql/data
+            - ./init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh:ro
+    s3:
+        image: minio/minio
+        environment:
+          MINIO_ROOT_USER: minio
+          MINIO_ROOT_PASSWORD: minio123
+        command: server /data
+        volumes:
+            - s3:/data
+        networks: 
+            - mattermost_network
+        restart: 'always'
+        ports:
+            - 9000:9000
+    smtp:
+        image: mailhog/mailhog
+        ports:
+            - 1025:1025
+            - 8025:8025
+    mattermost:
+        build: .
+        networks: 
+            - mattermost_network
+        volumes: 
+            - .:/buildpack
+            - cache:/cache
+            - build:/build
+            - env:/env
+            - app:/app
+        env_file: .env
+        ports: 
+            - 8065:8065
+        depends_on:
+            - postgres
+volumes: 
+    db_volume:
+    cache:
+    build:
+    env:
+    app:
+    s3:
+networks: 
+    mattermost_network:

@@ -1,0 +1,11 @@
+[buildpack]
+name = "Mattermost"
+
+  [publish.Ignore]
+  files = [
+    ".gitignore",
+    "Dockerfile",
+    "docker-compose.yml",
+    "init-user-db.sh",
+    ".env.sample"
+  ]
