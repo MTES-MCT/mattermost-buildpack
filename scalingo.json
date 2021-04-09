@@ -5,33 +5,45 @@
   "repository": "https://github.com/MTES-MCT/mattermost-scalingo",
   "website": "https://mattermost.com",
   "env": {
+    "BUILDPACK_URL": {
+      "description": "Buildpack used to deploy Mattermost",
+      "value": "https://github.com/MTES-MCT/mattermost-scalingo.git",
+      "required": true
+    },
     "DB_TYPE": {
       "description": "db addon type: postgres or mysql",
-      "value": "postgres"
+      "value": "postgres",
+      "required": true
     },
     "DB_USER": {
       "description": "db username",
-      "value": "mattermost"
+      "value": "mattermost",
+      "required": true
     },
     "DB_PASSWORD": {
       "description": "db password",
-      "value": ""
+      "value": "",
+      "required": true
     },
     "DB_NAME": {
       "description": "db name",
-      "value": "mattermost"
+      "value": "mattermost",
+      "required": true
     },
     "DB_HOST": {
       "description": "db host",
-      "value": ""
+      "value": "",
+      "required": true
     },
     "DB_PORT": {
       "description": "db port",
-      "value": "5432"
+      "value": "5432",
+      "required": true
     },
     "FILE_DRIVER_NAME": {
       "description": "file driver name",
-      "value": "amazons3"
+      "value": "amazons3",
+      "required": true
     },
     "S3_KEY_ID": {
       "description": "s3 key access key id",
@@ -74,5 +86,5 @@
       "value": ""
     }
   },
-  "addons": ["postgres"]
+  "addons": ["postgresql:postgresql-starter-512"]
 }
