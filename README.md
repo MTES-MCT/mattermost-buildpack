@@ -9,7 +9,7 @@
 [Add this buildpack environment variable][1] to your Scalingo application to install the `Mattermost` server:
 
 ```shell
-BUILDPACK_URL=https://github.com/MTES-MCT/mattermost-buildpack
+BUILDPACK_URL=https://github.com/MTES-MCT/mattermost-buildpack#main
 ```
 
 ## Configuration
