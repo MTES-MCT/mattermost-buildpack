@@ -8,7 +8,7 @@ services:
         env_file: .env
         restart: 'always'
         volumes:
-            - db_volume:/var/lib/postgresql/data
+            - postgres_data:/var/lib/postgresql/data
             - ./init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh:ro
     s3:
         image: minio/minio
@@ -17,7 +17,7 @@ services:
           MINIO_ROOT_PASSWORD: minio123
         command: server /data
         volumes:
-            - s3:/data
+            - s3_data:/data
         networks: 
             - mattermost_network
         restart: 'always'
@@ -44,11 +44,11 @@ services:
         depends_on:
             - postgres
 volumes: 
-    db_volume:
+    postgres_data:
     cache:
     build:
     env:
     app:
-    s3:
+    s3_data:
 networks: 
     mattermost_network:
