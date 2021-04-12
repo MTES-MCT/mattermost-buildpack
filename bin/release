@@ -7,5 +7,5 @@ addons:
 config_vars:
   PATH: "/app/bin:/app/mattermost/bin:/usr/local/bin:/usr/bin:/bin"
 default_process_types:
-  web: mattermost server
+  web: /app/mattermost/bin/mattermost server
 EOF
