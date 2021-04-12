@@ -90,5 +90,11 @@
       "value": "512m"
     }
   },
-  "addons": ["postgresql:postgresql-starter-512"]
+  "addons": ["postgresql:postgresql-starter-512"],
+  "formation": {
+    "web": {
+      "amount": 1,
+      "size": "M"
+    }
+  }
 }
