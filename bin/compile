@@ -102,8 +102,8 @@ start "Configure mattermost"
     MATTERMOST_FRONTEND_URL=""
   fi
 
-  if [[ -f "${ENV_DIR}/MATTERMOST_PORT" ]]; then
-    MATTERMOST_PORT=$(cat "$ENV_DIR/MATTERMOST_PORT")
+  if [[ -f "${ENV_DIR}/PORT" ]]; then
+    MATTERMOST_PORT=$(cat "$ENV_DIR/PORT")
   else
     MATTERMOST_PORT="8065"
   fi
