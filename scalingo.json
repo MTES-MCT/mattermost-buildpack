@@ -2,12 +2,12 @@
   "name": "Mattermost",
   "description": "Mattermost",
   "logo": "https://about.mattermost.com/wp-content/uploads/2017/08/Mattermost-Logo-Blue.svg",
-  "repository": "https://github.com/MTES-MCT/mattermost-buildpack",
+  "repository": "https://github.com/MTES-MCT/mattermost-scalingo",
   "website": "https://mattermost.com",
   "env": {
     "BUILDPACK_URL": {
       "description": "Buildpack used to deploy Mattermost",
-      "value": "https://github.com/MTES-MCT/mattermost-buildpack.git",
+      "value": "https://github.com/MTES-MCT/mattermost-buildpack#main",
       "required": true
     },
     "DB_TYPE": {
@@ -84,6 +84,10 @@
     "MATTERMOST_FRONTEND_URL": {
       "description": "site url",
       "value": ""
+    },
+    "MAX_METASPACE_SIZE": {
+      "description": "Control max memory available",
+      "value": "512m"
     }
   },
   "addons": ["postgresql:postgresql-starter-512"]
