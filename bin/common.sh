@@ -114,7 +114,7 @@ function configure_mattermost() {
   local s3_endpoint="${13}"
   local MM_CONFIG="${mattermost_path}/config/config.json"
   jq ".ServiceSettings.SiteURL = \"${site_url}\"" "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
-  jq ".ServiceSettings.ListenAddress = \"0.0.0.0:${mattermost_port}\"" "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
+  jq ".ServiceSettings.ListenAddress = \":${mattermost_port}\"" "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
   jq ".EmailSettings.SMTPUsername = \"${smtp_user}\"" "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
   jq ".EmailSettings.SMTPPassword = \"${smtp_password}\"" "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
   jq ".EmailSettings.SMTPServer = \"${smtp_host}\"" "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"

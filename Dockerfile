@@ -13,5 +13,3 @@ HEALTHCHECK CMD curl --fail http://localhost:8065 || exit 1
 EXPOSE 8065
 
 ENTRYPOINT [ "/app/mattermost/bin/mattermost" ]
-
-CMD [ "server" ]
