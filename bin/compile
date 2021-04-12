@@ -168,6 +168,7 @@ start "Configure mattermost"
     S3_ENDPOINT=""
   fi
 configure_mattermost "${MATTERMOST_PATH}" "${MATTERMOST_FRONTEND_URL}" "${MATTERMOST_PORT}" "${SMTP_HOST}"  "${SMTP_PORT}"  "${SMTP_USER}"  "${SMTP_PASSWORD}" "${FILE_DRIVER_NAME}" "${S3_KEY_ID}" "${S3_KEY_SECRET}" "${S3_BUCKET}" "${S3_REGION}" "${S3_ENDPOINT}" | indent
+chmod +x "${MATTERMOST_PATH}/bin/mattermost"
 finished
 
 step "Cleaning up tmp files"
