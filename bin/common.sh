@@ -84,12 +84,12 @@ function configure_database() {
   case $db_type in
     postgres) 
       jq '.SqlSettings.DriverName = "postgres"' "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
-      local PG_URL="postgres://${db_user}:${ENCODED_PASSWORD}@${db_host}:${db_port}/${db_name}?sslmode=disable&connect_timeout=10"
+      local PG_URL="postgres://${db_user}:${ENCODED_PASSWORD}@${db_host}:${db_port}/${db_name}?sslmode=prefer"
       jq ".SqlSettings.DataSource = \"${PG_URL}\"" "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
       ;;
     mysql)
       jq '.SqlSettings.DriverName = "mysql"' "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
-      local MYSQL_URL="${db_user}://${ENCODED_PASSWORD}@tcp(${db_host}:${db_port})/${db_name}?charset=utf8mb4,utf8&readTimeout=30s&writeTimeout=30s"
+      local MYSQL_URL="${db_user}://${ENCODED_PASSWORD}@tcp(${db_host}:${db_port})/${db_name}?charset=utf8mb4,utf8"
       jq ".SqlSettings.DataSource = \"${MYSQL_URL}\"" "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
       ;;
     *)
@@ -125,5 +125,5 @@ function configure_mattermost() {
   jq ".FileSettings.AmazonS3Bucket = \"${s3_bucket}\"" "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
   jq ".FileSettings.AmazonS3Region = \"${s3_region}\"" "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
   jq ".FileSettings.AmazonS3Endpoint = \"${s3_endpoint}\"" "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
-  jq ".PluginSettings.ClientDirectory = \"${mattermost_path}/client/plugins\"" "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
+  jq ".PluginSettings.ClientDirectory = \"/app/mattermost/client/plugins\"" "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
 }
