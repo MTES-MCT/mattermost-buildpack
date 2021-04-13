@@ -104,7 +104,13 @@ start "Configure database addon"
     DB_SSLMODE="disable"
   fi
 
-configure_database "${MATTERMOST_PATH}" "${DB_TYPE}" "${DB_USER}" "${DB_PASSWORD}" "${DB_HOST}" "${DB_PORT}" "${DB_NAME}" "${DB_SSLMODE}" | indent
+  if [[ -f "${ENV_DIR}/DB_USESSL" ]]; then
+    DB_USESSL=$(cat "$ENV_DIR/DB_USESSL")
+  else
+    DB_USESSL="false"
+  fi
+
+configure_database "${MATTERMOST_PATH}" "${DB_TYPE}" "${DB_USER}" "${DB_PASSWORD}" "${DB_HOST}" "${DB_PORT}" "${DB_NAME}" "${DB_SSLMODE}" "${DB_USESSL}" | indent
 finished
 
 start "Configure mattermost"
