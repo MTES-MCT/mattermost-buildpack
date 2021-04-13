@@ -17,6 +17,8 @@ services:
             - mattermost_network
         env_file: .env
         restart: 'always'
+        ports:
+            - 3306:3306
         volumes:
             - mysql_data:/var/lib/mysql
             - ./init-user-db/mysql/init-user-db.sql:/docker-entrypoint-initdb.d/init-user-db.sql:ro
@@ -53,6 +55,7 @@ services:
             - 8065:8065
         depends_on:
             - postgres
+            - mysql
 volumes: 
     postgres_data:
     mysql_data:

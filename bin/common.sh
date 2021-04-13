@@ -83,7 +83,8 @@ function configure_database() {
   local db_port="$6"
   local db_name="$7"
   local db_sslmode="$8"
-  local db_usessl="$9"
+  local db_use_ssl="$9"
+  local db_ssl_verify_ca="${10}"
   local MM_CONFIG="${mattermost_path}/config/config.json"
   local ENCODED_PASSWORD
   ENCODED_PASSWORD=$(printf %s "$db_password" | jq -s -R -r @uri)
@@ -95,7 +96,7 @@ function configure_database() {
       ;;
     mysql)
       jq '.SqlSettings.DriverName = "mysql"' "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
-      local MYSQL_URL="${db_user}://${ENCODED_PASSWORD}@tcp(${db_host}:${db_port})/${db_name}?useSSL=${db_usessl}"
+      local MYSQL_URL="mysql://${db_user}:${ENCODED_PASSWORD}@tcp(${db_host}:${db_port})/${db_name}?useSSL=${db_use_ssl}&verifyServerCertificate=${db_ssl_verify_ca}"
       jq ".SqlSettings.DataSource = \"${MYSQL_URL}\"" "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
       ;;
     *)
