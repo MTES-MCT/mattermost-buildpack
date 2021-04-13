@@ -125,4 +125,5 @@ function configure_mattermost() {
   jq ".FileSettings.AmazonS3Bucket = \"${s3_bucket}\"" "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
   jq ".FileSettings.AmazonS3Region = \"${s3_region}\"" "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
   jq ".FileSettings.AmazonS3Endpoint = \"${s3_endpoint}\"" "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
+  jq ".PluginSettings.ClientDirectory = \"${mattermost_path}/client/plugins\"" "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
 }
