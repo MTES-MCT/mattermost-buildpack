@@ -68,13 +68,43 @@ start "Configure database addon"
     DB_TYPE="postgres"
   fi
 
-  if [[ -f "${ENV_DIR}/DATABASE_URL" ]]; then
-    DATABASE_URL=$(cat "$ENV_DIR/DATABASE_URL")
+  if [[ -f "${ENV_DIR}/DB_USER" ]]; then
+    DB_USER=$(cat "$ENV_DIR/DB_USER")
   else
-    DATABASE_URL=""
+    DB_USER="mmuser"
   fi
 
-configure_database "${MATTERMOST_PATH}" "${DB_TYPE}" "${DATABASE_URL}" | indent
+  if [[ -f "${ENV_DIR}/DB_PASSWORD" ]]; then
+    DB_PASSWORD=$(cat "$ENV_DIR/DB_PASSWORD")
+  else
+    DB_PASSWORD=""
+  fi
+
+  if [[ -f "${ENV_DIR}/DB_HOST" ]]; then
+    DB_HOST=$(cat "$ENV_DIR/DB_HOST")
+  else
+    DB_HOST="localhost"
+  fi
+
+  if [[ -f "${ENV_DIR}/DB_PORT" ]]; then
+    DB_PORT=$(cat "$ENV_DIR/DB_PORT")
+  else
+    DB_PORT="5432"
+  fi
+
+  if [[ -f "${ENV_DIR}/DB_NAME" ]]; then
+    DB_NAME=$(cat "$ENV_DIR/DB_NAME")
+  else
+    DB_NAME="mattermost"
+  fi
+
+  if [[ -f "${ENV_DIR}/DB_SSLMODE" ]]; then
+    DB_SSLMODE=$(cat "$ENV_DIR/DB_SSLMODE")
+  else
+    DB_SSLMODE="disable"
+  fi
+
+configure_database "${MATTERMOST_PATH}" "${DB_TYPE}" "${DB_USER}" "${DB_PASSWORD}" "${DB_HOST}" "${DB_PORT}" "${DB_NAME}" "${DB_SSLMODE}" | indent
 finished
 
 start "Configure mattermost"
