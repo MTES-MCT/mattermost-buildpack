@@ -52,6 +52,6 @@ You can also use docker-compose in order to test with a complete stack (db, s3, 
 docker-compose up --build -d
 ```
 
-`.env.sample` is configured to work with this stack. You just need to create the bucket in minio.
+`.env.sample` is configured to work with this stack. You just need to create the bucket `mattermost` in minio.
 
 [1]: https://doc.scalingo.com/platform/deployment/buildpacks/custom
