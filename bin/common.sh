@@ -59,8 +59,8 @@ function install_jq() {
 function fetch_mattermost_dist() {
   local version="$1"
   local location="$2"
-
-  local dist="mattermost-${version}-linux-amd64.tar.gz"
+  local team="$3"
+  local dist="mattermost-${team}-${version}-linux-amd64.tar.gz"
   local dist_url="https://releases.mattermost.com/${version}/${dist}"
   if [ -f "${CACHE_DIR}/dist/${dist}" ]; then
     info "File is already downloaded"
@@ -73,29 +73,13 @@ function fetch_mattermost_dist() {
 function configure_database() {
   local mattermost_path="$1"
   local db_type="$2"
-  local db_user="$3"
-  local db_password="$4"
-  local db_host="$5"
-  local db_port="$6"
-  local db_name="$7"
+  local db_url="$3"
+  local encoded_url
+  encoded_url=$(printf %s "$db_url" | jq -s -R -r @uri)
   local MM_CONFIG="${mattermost_path}/config/config.json"
-  local ENCODED_PASSWORD
-  ENCODED_PASSWORD=$(printf %s "$db_password" | jq -s -R -r @uri)
-  case $db_type in
-    postgres) 
-      jq '.SqlSettings.DriverName = "postgres"' "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
-      local PG_URL="postgres://${db_user}:${ENCODED_PASSWORD}@${db_host}:${db_port}/${db_name}?sslmode=prefer"
-      jq ".SqlSettings.DataSource = \"${PG_URL}\"" "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
-      ;;
-    mysql)
-      jq '.SqlSettings.DriverName = "mysql"' "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
-      local MYSQL_URL="${db_user}://${ENCODED_PASSWORD}@tcp(${db_host}:${db_port})/${db_name}?charset=utf8mb4,utf8"
-      jq ".SqlSettings.DataSource = \"${MYSQL_URL}\"" "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
-      ;;
-    *)
-      error "${db_type} unkown. Only postgres or mysql are required."
-      ;;
-  esac
+  info "Db type: ${db_type} url: ${encoded_url}"
+  jq ".SqlSettings.DriverName = \"${db_type}\"" "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
+  jq ".SqlSettings.DataSource = \"${encoded_url}\"" "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
 }
 
 function configure_mattermost() {

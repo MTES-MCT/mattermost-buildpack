@@ -29,9 +29,16 @@ else
   MATTERMOST_VERSION="5.33.3"
 fi
 
-start "Fetch Mattermost ${MATTERMOST_VERSION} dist"
+if [[ -f "${ENV_DIR}/MATTERMOST_EDITION" ]]; then
+  MATTERMOST_EDITION=$(cat "$ENV_DIR/MATTERMOST_EDITION")
+else
+  MATTERMOST_EDITION="" # default is enterprise (empty) and otherwise team
+fi
+
+start "Fetch Mattermost ${MATTERMOST_VERSION} ${MATTERMOST_EDITION} dist"
+
 if [ ! -d "${MATTERMOST_PATH}" ]; then
-  fetch_mattermost_dist "${MATTERMOST_VERSION}" "${TMP_PATH}" | indent
+  fetch_mattermost_dist "${MATTERMOST_VERSION}" "${TMP_PATH}" "${MATTERMOST_EDITION}" | indent
   mv "${TMP_PATH}/mattermost" "${MATTERMOST_PATH}"
 else
   warn "Mattermost already installed"
@@ -50,7 +57,7 @@ else
 fi
 finished
 
-info "Using mattermost version: ${MATTERMOST_VERSION}" | indent
+info "Using mattermost version: ${MATTERMOST_VERSION} edition: ${MATTERMOST_EDITION}" | indent
 
 install_jq
 
@@ -61,37 +68,13 @@ start "Configure database addon"
     DB_TYPE="postgres"
   fi
 
-  if [[ -f "${ENV_DIR}/DB_USER" ]]; then
-    DB_USER=$(cat "$ENV_DIR/DB_USER")
+  if [[ -f "${ENV_DIR}/DATABASE_URL" ]]; then
+    DATABASE_URL=$(cat "$ENV_DIR/DATABASE_URL")
   else
-    DB_USER="mmuser"
+    DATABASE_URL=""
   fi
 
-  if [[ -f "${ENV_DIR}/DB_PASSWORD" ]]; then
-    DB_PASSWORD=$(cat "$ENV_DIR/DB_PASSWORD")
-  else
-    DB_PASSWORD=""
-  fi
-
-  if [[ -f "${ENV_DIR}/DB_HOST" ]]; then
-    DB_HOST=$(cat "$ENV_DIR/DB_HOST")
-  else
-    DB_HOST="localhost"
-  fi
-
-  if [[ -f "${ENV_DIR}/DB_PORT" ]]; then
-    DB_PORT=$(cat "$ENV_DIR/DB_PORT")
-  else
-    DB_PORT="5432"
-  fi
-
-  if [[ -f "${ENV_DIR}/DB_NAME" ]]; then
-    DB_NAME=$(cat "$ENV_DIR/DB_NAME")
-  else
-    DB_NAME="mattermost"
-  fi
-
-configure_database "${MATTERMOST_PATH}" "${DB_TYPE}" "${DB_USER}" "${DB_PASSWORD}" "${DB_HOST}" "${DB_PORT}" "${DB_NAME}" | indent
+configure_database "${MATTERMOST_PATH}" "${DB_TYPE}" "${DATABASE_URL}" | indent
 finished
 
 start "Configure mattermost"
