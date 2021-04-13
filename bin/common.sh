@@ -60,7 +60,11 @@ function fetch_mattermost_dist() {
   local version="$1"
   local location="$2"
   local team="$3"
-  local dist="mattermost-${team}-${version}-linux-amd64.tar.gz"
+  local dist="mattermost"
+  if [[ $team == "team" ]]; then
+    dist="${dist}-${team}"  
+  fi
+  dist="${dist}-${version}-linux-amd64.tar.gz"
   local dist_url="https://releases.mattermost.com/${version}/${dist}"
   if [ -f "${CACHE_DIR}/dist/${dist}" ]; then
     info "File is already downloaded"
