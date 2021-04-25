@@ -26,7 +26,7 @@ start "Install Mattermost"
 if [[ -f "$ENV_DIR/MATTERMOST_VERSION" ]]; then
   MATTERMOST_VERSION=$(cat "$ENV_DIR/MATTERMOST_VERSION")
 else
-  MATTERMOST_VERSION="5.33.3"
+  MATTERMOST_VERSION="5.34.2"
 fi
 
 if [[ -f "${ENV_DIR}/MATTERMOST_EDITION" ]]; then
@@ -63,6 +63,12 @@ else
 fi
 
 info "Using mattermost version: ${MATTERMOST_VERSION} edition: ${MATTERMOST_EDITION_LABEL}" | indent
+finished
+
+start "Building run"
+
+cp "${buildpack}/run.sh" "${MATTERMOST_PATH}/bin/run"
+chmod +x "${MATTERMOST_PATH}/bin/run"
 finished
 
 step "Cleaning up tmp files"

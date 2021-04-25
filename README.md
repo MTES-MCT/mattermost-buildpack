@@ -16,13 +16,19 @@ BUILDPACK_URL=https://github.com/MTES-MCT/mattermost-buildpack#main
 
 You must have an add-on database `postgresql` or `mysql`.
 
-Environment variables are set in a `.env` file. You copy the sample one:
+Sample environment variables are set in a `.env.sample` file.
+
+`PORT` and `DATABASE_URL` are provided by Scalingo.
+`MATTERMOST_EDITION` and `MATTERMOST_VERSION` can be set by you in environment variables in Scalingo.
+All other environment variables are specific to mattermost, see [documentation](https://docs.mattermost.com/administration/config-settings.html#environment-variables).
+
+## Hacking 
+
+You set environment variables in `.env`:
 
 ```shell
 cp .env.sample .env
 ```
-
-## Hacking
 
 Run an interactive docker scalingo stack:
 

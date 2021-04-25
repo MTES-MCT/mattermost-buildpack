@@ -12,18 +12,13 @@
     },
     "MATTERMOST_VERSION": {
       "description": "mattermost version",
-      "value": "5.33.3",
+      "value": "5.34.2",
       "required": false
     },
     "MATTERMOST_EDITION": {
       "description": "edition team or enterprise (empty default)",
       "value": "",
       "required": false
-    },
-    "MM_SERVICESETTINGS_LISTENADDRESS": {
-      "description": "listen address",
-      "value": ":${PORT}",
-      "required": true
     },
     "MM_SERVICESETTINGS_SITEURL": {
       "description": "site url",
