@@ -13,4 +13,4 @@ HEALTHCHECK CMD curl --fail http://localhost:8065 || exit 1
 
 EXPOSE 8065
 
-ENTRYPOINT [ "/app/mattermost/bin/mattermost" ]
+ENTRYPOINT [ "/app/mattermost/bin/mattermost", "--config", "/app/mattermost/config/config.json" ]

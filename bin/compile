@@ -57,7 +57,13 @@ else
 fi
 finished
 
-info "Using mattermost version: ${MATTERMOST_VERSION} edition: ${MATTERMOST_EDITION}" | indent
+if [[ -z "${MATTERMOST_EDITION}" ]]; then
+  MATTERMOST_EDITION_LABEL="enterprise"
+else
+  MATTERMOST_EDITION_LABEL="team" # default is enterprise (empty) and otherwise team
+fi
+
+info "Using mattermost version: ${MATTERMOST_VERSION} edition: ${MATTERMOST_EDITION_LABEL}" | indent
 
 install_jq
 

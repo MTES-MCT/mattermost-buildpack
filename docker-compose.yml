@@ -10,18 +10,18 @@ services:
         volumes:
             - postgres_data:/var/lib/postgresql/data
             - ./init-user-db/postgresql/init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh:ro
-    mysql: 
-        image: mysql
-        command: --default-authentication-plugin=mysql_native_password
-        networks: 
-            - mattermost_network
-        env_file: .env
-        restart: 'always'
-        ports:
-            - 3306:3306
-        volumes:
-            - mysql_data:/var/lib/mysql
-            - ./init-user-db/mysql/init-user-db.sql:/docker-entrypoint-initdb.d/init-user-db.sql:ro
+    # mysql: 
+    #     image: mysql
+    #     command: --default-authentication-plugin=mysql_native_password
+    #     networks: 
+    #         - mattermost_network
+    #     env_file: .env
+    #     restart: 'always'
+    #     ports:
+    #         - 3306:3306
+    #     volumes:
+    #         - mysql_data:/var/lib/mysql
+    #         - ./init-user-db/mysql/init-user-db.sql:/docker-entrypoint-initdb.d/init-user-db.sql:ro
     s3:
         image: minio/minio
         environment:
@@ -55,7 +55,7 @@ services:
             - 8065:8065
         depends_on:
             - postgres
-            - mysql
+            # - mysql
 volumes: 
     postgres_data:
     mysql_data:
