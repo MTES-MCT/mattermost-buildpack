@@ -7,82 +7,83 @@
   "env": {
     "BUILDPACK_URL": {
       "description": "Buildpack used to deploy Mattermost",
-      "value": "https://github.com/MTES-MCT/mattermost-buildpack#main",
+      "value": "https://github.com/MTES-MCT/mattermost-buildpack#tristanrobert/issue1",
       "required": true
     },
-    "DB_TYPE": {
-      "description": "db addon type: postgres or mysql",
+    "MATTERMOST_VERSION": {
+      "description": "mattermost version",
+      "value": "5.33.3",
+      "required": false
+    },
+    "MATTERMOST_EDITION": {
+      "description": "edition team or enterprise (empty default)",
+      "value": "",
+      "required": false
+    },
+    "MM_SERVICESETTINGS_LISTENADDRESS": {
+      "description": "listen address",
+      "value": ":${PORT}",
+      "required": true
+    },
+    "MM_SERVICESETTINGS_SITEURL": {
+      "description": "site url",
+      "value": "",
+      "required": false
+    },
+    "MM_SQLSETTINGS_DRIVERNAME": {
+      "description": "postgres or mysql addon",
       "value": "postgres",
       "required": true
     },
-    "DB_USER": {
-      "description": "db username",
-      "value": "mattermost",
+    "MM_SQLSETTINGS_DATASOURCE": {
+      "description": "db url",
+      "value": "${DATABASE_URL}",
       "required": true
     },
-    "DB_PASSWORD": {
-      "description": "db password",
-      "value": "",
-      "required": true
+    "MM_FILESETTINGS_DRIVERNAME": {
+      "description": "file drive: local or amazons3",
+      "value": "local",
+      "required": false
     },
-    "DB_NAME": {
-      "description": "db name",
-      "value": "mattermost",
-      "required": true
+    "MM_PLUGINSETTINGS_CLIENTDIRECTORY": {
+      "description": "client plugins directory",
+      "value": "/app/mattermost/client/plugins",
+      "required": false
     },
-    "DB_HOST": {
-      "description": "db host",
-      "value": "",
-      "required": true
-    },
-    "DB_PORT": {
-      "description": "db port",
-      "value": "5432",
-      "required": true
-    },
-    "FILE_DRIVER_NAME": {
-      "description": "file driver name",
-      "value": "amazons3",
-      "required": true
-    },
-    "S3_KEY_ID": {
+    "MM_FILESETTINGS_AMAZONS3ACCESSKEYID": {
       "description": "s3 key access key id",
       "value": ""
     },
-    "S3_KEY_SECRET": {
+    "MM_FILESETTINGS_AMAZONS3SECRETACCESSKEY": {
       "description": "s3 key access secret",
       "value": ""
     },
-    "S3_BUCKET": {
+    "MM_FILESETTINGS_AMAZONS3BUCKET": {
       "description": "s3 bucket",
       "value": ""
     },
-    "S3_REGION": {
+    "MM_FILESETTINGS_AMAZONS3REGION": {
       "description": "s3 region",
       "value": ""
     },
-    "S3_ENDPOINT": {
+    "MM_FILESETTINGS_AMAZONS3ENDPOINT": {
       "description": "s3 endpoint e.g. s3.sample.com:443",
       "value": ""
     },
-    "SMTP_HOST": {
+    "MM_EMAILSETTINGS_SMTPSERVER": {
       "description": "smtp host",
       "value": ""
     },
-    "SMTP_PORT": {
+    "MM_EMAILSETTINGS_SMTPPORT": {
       "description": "smtp port",
       "value": ""
     },
-    "SMTP_USER": {
+    "MM_EMAILSETTINGS_SMTPUSERNAME": {
       "description": "smtp user name",
       "value": ""
     },
-    "SMTP_PASSWORD": {
+    "MM_EMAILSETTINGS_SMTPPASSWORD": {
       "description": "smtp password",
-      "value": ""
-    },
-    "MATTERMOST_FRONTEND_URL": {
-      "description": "site url",
       "value": ""
     },
     "MAX_METASPACE_SIZE": {
@@ -90,11 +91,11 @@
       "value": "512m"
     }
   },
-  "addons": ["postgresql:postgresql-starter-512"],
+  "addons": ["postgresql:postgresql-sandbox"],
   "formation": {
     "web": {
       "amount": 1,
-      "size": "M"
+      "size": "S"
     }
   }
 }
