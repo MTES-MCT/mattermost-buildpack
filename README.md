@@ -19,6 +19,7 @@ You must have an add-on database `postgresql` or `mysql`.
 Sample environment variables are set in a `.env.sample` file.
 
 `PORT` and `DATABASE_URL` are provided by Scalingo.
+Warning ⚠️: you should copy the database url in `MM_SQLSETTINGS_DATASOURCE` and change `sslmode` because `prefer` is unknown by mattermost.
 `MATTERMOST_EDITION` and `MATTERMOST_VERSION` can be set by you in environment variables in Scalingo.
 All other environment variables are specific to mattermost, see [documentation](https://docs.mattermost.com/administration/config-settings.html#environment-variables).
 
