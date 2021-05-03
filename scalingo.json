@@ -7,7 +7,7 @@
   "env": {
     "BUILDPACK_URL": {
       "description": "Buildpack used to deploy Mattermost",
-      "value": "https://github.com/MTES-MCT/mattermost-buildpack#tristanrobert/issue1",
+      "value": "https://github.com/MTES-MCT/mattermost-buildpack#main",
       "required": true
     },
     "MATTERMOST_VERSION": {
