@@ -35,6 +35,11 @@
       "value": "${DATABASE_URL}",
       "required": true
     },
+    "MM_CONFIG": {
+      "description": "persist config in db",
+      "value": "${DATABASE_URL}",
+      "required": false
+    },
     "MM_FILESETTINGS_DRIVERNAME": {
       "description": "file drive: local or amazons3",
       "value": "local",
