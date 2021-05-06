@@ -10,6 +10,11 @@
       "value": "https://github.com/MTES-MCT/mattermost-buildpack#main",
       "required": true
     },
+    "JQ_VERSION": {
+      "description": "jq version",
+      "value": "1.6",
+      "required": false
+    },
     "MATTERMOST_VERSION": {
       "description": "mattermost version",
       "value": "5.34.2",
@@ -17,6 +22,11 @@
     },
     "MATTERMOST_EDITION": {
       "description": "edition team or enterprise (empty default)",
+      "value": "",
+      "required": false
+    },
+    "MATTERMOST_PLUGINS": {
+      "description": "plugins id list to install at build, e.g plugin_id1,plugin_id2",
       "value": "",
       "required": false
     },
@@ -32,12 +42,12 @@
     },
     "MM_SQLSETTINGS_DATASOURCE": {
       "description": "db url",
-      "value": "${DATABASE_URL}",
+      "value": "${SCALINGO_POSTGRESQL_URL}",
       "required": true
     },
     "MM_CONFIG": {
-      "description": "persist config in db",
-      "value": "${DATABASE_URL}",
+      "description": "persist config in db (copy url)",
+      "value": "${SCALINGO_POSTGRESQL_URL}",
       "required": false
     },
     "MM_FILESETTINGS_DRIVERNAME": {
