@@ -16,7 +16,7 @@ fi
 
 MATTERMOST_PATH="$BUILD_DIR/mattermost"
 TMP_PATH="$BUILD_DIR/tmp"
-mkdir -p "${BUILD_DIR}/bin" "${CACHE_DIR}/dist" "${TMP_PATH}"
+mkdir -p "${BUILD_DIR}/bin" "${CACHE_DIR}/dist" "${CACHE_DIR}/dist/plugins" "${TMP_PATH}"
 export PATH="$BUILD_DIR/bin:$PATH"
 
 STACK="${STACK:-scalingo-18}"
@@ -56,6 +56,35 @@ else
 fi
 finished
 
+start "Install plugins list from marketplace"
+if [[ ! -d "$MATTERMOST_PATH/postdeploy_plugins" ]]; then
+  mkdir -p "$MATTERMOST_PATH/postdeploy_plugins"
+fi
+if [[ -f "${ENV_DIR}/MATTERMOST_MARKETPLACE_PLUGINS" ]]; then
+  MATTERMOST_MARKETPLACE_PLUGINS=$(cat "$ENV_DIR/MATTERMOST_MARKETPLACE_PLUGINS")
+else
+  MATTERMOST_MARKETPLACE_PLUGINS=""
+fi
+if [[ -n $MATTERMOST_MARKETPLACE_PLUGINS ]]; then  
+  install_marketplace_plugins_list "$BUILD_DIR/mattermost/postdeploy_plugins" "${MATTERMOST_VERSION}" "${MATTERMOST_MARKETPLACE_PLUGINS}"
+else
+  info "No plugins from marketplace to install"
+fi
+finished
+
+start "Install plugins list from Github"
+if [[ -f "${ENV_DIR}/MATTERMOST_GITHUB_PLUGINS" ]]; then
+  MATTERMOST_GITHUB_PLUGINS=$(cat "$ENV_DIR/MATTERMOST_GITHUB_PLUGINS")
+else
+  MATTERMOST_GITHUB_PLUGINS=""
+fi
+if [[ -n $MATTERMOST_GITHUB_PLUGINS ]]; then  
+  install_github_plugins_list "$BUILD_DIR/mattermost/postdeploy_plugins" "${MATTERMOST_GITHUB_PLUGINS}"
+else
+  info "No plugins from Github to install"
+fi
+finished
+
 if [[ -z "${MATTERMOST_EDITION}" ]]; then
   MATTERMOST_EDITION_LABEL="enterprise"
 else
@@ -66,9 +95,13 @@ info "Using mattermost version: ${MATTERMOST_VERSION} edition: ${MATTERMOST_EDIT
 finished
 
 start "Building run"
-
 cp "${buildpack}/run.sh" "${MATTERMOST_PATH}/bin/run"
 chmod +x "${MATTERMOST_PATH}/bin/run"
+finished
+
+start "Building postdeploy"
+cp "${buildpack}/postdeploy.sh" "${MATTERMOST_PATH}/bin/postdeploy"
+chmod +x "${MATTERMOST_PATH}/bin/postdeploy"
 finished
 
 step "Cleaning up tmp files"
