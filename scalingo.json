@@ -101,7 +101,7 @@
       "value": "512m"
     }
   },
-  "addons": ["postgresql:postgresql-sandbox"],
+  "addons": ["postgresql:postgresql-starter-512"],
   "formation": {
     "web": {
       "amount": 1,
